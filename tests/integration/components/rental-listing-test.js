@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
+import { render, click, currentURL, visit } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import EmberObject from '@ember/object';
 
@@ -31,5 +31,13 @@ module('Integration | Component | rental-listing', function(hooks) {
     assert.ok(this.element.querySelector('.image.wide'), 'rendered wide after click');
     await click('.image');
     assert.notOk(this.element.querySelector('.image.wide'), 'rendered small after second click');
+  });
+
+  test('should show details for a specific rental', async function(assert) {
+    await visit('/rentals');
+    await click(".grand-old-mansion");
+    assert.equal(currentURL(), '/rentals/grand-old-mansion', "should navigate to show route");
+    assert.ok(this.element.querySelector('.show-listing h2').textContent.includes("Grand Old Mansion"), 'should list rental title');
+    assert.ok(this.element.querySelector('.show-listing .description'), 'should list a description of the property');
   });
 });
